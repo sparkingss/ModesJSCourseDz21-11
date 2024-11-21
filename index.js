@@ -33,8 +33,9 @@ console.log(getName());
 */
 
 /*
-Ответ: будет потеря контекста, т.к. this.name в методе объекта obj обращается к полю name в контексте объекте, в котором он вызывается.
-Могут быть следующие решение, в зависимости от ситуации:
+Ответ: В консоль выведет undefined, потому что будет потерян контекст, т.к. this.name в методе объекта obj обращается к полю name в контексте объекта,
+в котором он вызывается.
+Могут быть следующие решения, в зависимости от ситуации:
     1. Создание отдельного объекта, в котором будет представлено поле name и вызов у него метода getName из obj при помощи call.
     2. Для функции getName через метод bind привязать контекст функции к объекту, чтобы она при вызове всегда обращалась к контексту этого объекта.
 */
@@ -50,9 +51,9 @@ const anotherObj = {
     name: 'Second object'
 }
 
-console.log(obj.getName.call(anotherObj)); // первое решение
+console.log(obj.getName.call(anotherObj)); // первое решение, если нам нужно вызвать для другого объекта
 
-const getName = obj.getName.bind(obj); // второе решение
+const getName = obj.getName.bind(obj); // второе решение, если нужно создать функцию вне объекта, которая будет работать с его контекстом.
 console.log(getName());
 
 
@@ -71,20 +72,21 @@ const person = { name: 'Alice' };
 function greet(){
     return `Greetings, ${this.name}!`;
 }
+
+function greetWithNameAsParam(name){ // Вариант, если я всё же неправ
+    return `Greetings, ${name}!`;
+}
 const person = { name: 'Alice' };
 
 console.log('Первый вызов через call: ', greet.call(person));
 console.log('Второй вызов через apply: ', greet.apply(person));
 console.log('Третий вызов через bind: ', greet.bind(person)());
 
-// //На всякий через принимаемый аргумент
-// const newGreet = function(name){
-//     return `Greetings, ${name}!`;
-// }
+//На всякий случай сделал и для функции, которая имеет принимаемые параметры, чтобы показать, в каком виде подаются аргументы в тот или иной метод.
+console.log(`Вызов через call: `, greetWithNameAsParam.call(person, person.name));
+console.log(`Вызов через apply: `, greetWithNameAsParam.apply(person, [person.name]));
+console.log(`Вызов через call: `, greetWithNameAsParam.bind(person, person.name)());
 
-// console.log('Первый вызов через call: ', newGreet.call(person.name));
-// // console.log('Второй вызов через apply: ', greet.apply(person));
-// // console.log('Второй вызов через call: ', greet.bind(person)());
 
 /*
 Задание 4
